@@ -1,17 +1,25 @@
 package entities.account;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
+@Entity
 public class AccountImpl implements Account {
 
-    private static String iban;
-    private static String egn;
-    private static double interest;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String iban;
+    private String egn;
+    private double interest;
     private double balance;
     private String date;
 
@@ -22,6 +30,11 @@ public class AccountImpl implements Account {
         this.setBalance(balance);
         this.setDate(date);
     }
+
+    public AccountImpl() {
+
+    }
+
 
     @Override
     public String getIban() {
