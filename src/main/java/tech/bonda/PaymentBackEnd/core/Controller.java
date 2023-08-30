@@ -1,4 +1,4 @@
-package core;
+package tech.bonda.PaymentBackEnd.core;
 
 public interface Controller {
 
