@@ -190,7 +190,7 @@ public class AccountImpl implements Account {
         }
     }
 
-    public static int checkIBAN(String strIBAN) {
+    private static int checkIBAN(String strIBAN) {
         int i = 1;
         String kod = "";
 
