@@ -125,7 +125,7 @@ public class Card implements Cardable {
     }
 
 
-    @Override
+
     private static int mod(int a, int b) {
         return a % b;
     }
