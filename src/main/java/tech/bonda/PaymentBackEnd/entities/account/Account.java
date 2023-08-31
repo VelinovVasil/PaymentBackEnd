@@ -1,41 +1,31 @@
 package tech.bonda.PaymentBackEnd.entities.account;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Entity
 public class Account {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String name;
-    private String iban;
     private String egn;
-    private double balance;
-    private String date;
+    private String dateOfCreation;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private Collection<Card> cards;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private Collection<Transaction> transactions;
 
     public Account() {
-    }
-
-    public Account(String name, String iban, String egn, double balance, String date) {
-        this.setName(name);
-        this.setIban(iban);
-        this.setEgn(egn);
-        this.setBalance(balance);
-        this.setDate(date);
     }
 
     private static int checkEGN(String txt) {
@@ -136,106 +126,7 @@ public class Account {
         }
     }
 
-    private static int checkIBAN(String strIBAN) {
-        int i = 1;
-        String kod = "";
-
-        // Define the Bis_Ascii_arr using a List of Strings
-        List<String> bisAscii = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", // 13
-                "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", // 26
-                "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", // 37
-                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", // 48
-                "32", "33", "34", "35")); // 51
-
-        String strIBANNew = strIBAN.replace(" ", "");
-
-        // Check if the first and second characters are digits
-        if (!Character.isDigit(strIBANNew.charAt(0)) || !Character.isDigit(strIBANNew.charAt(1)))
-        {
-            return 0;
-        }
-
-        // Reorder the characters in strIBANNew
-        strIBANNew = strIBANNew.substring(4) + strIBANNew.substring(0, 4);
-
-        String ibanNum = "";
-        if (strIBANNew != null)
-        {
-            for (i = 0; i < strIBANNew.length(); i++)
-            {
-                String numb = "";
-                for (int j = 0; j < 26; j++)
-                {
-                    if (Character.toUpperCase(strIBANNew.charAt(i)) == bisAscii.get(j).charAt(0))
-                    {
-                        numb = bisAscii.get(j + 26);
-                        break;
-                    }
-                }
-
-                if (numb != null)
-                {
-                    ibanNum += numb;
-                }
-                else
-                {
-                    ibanNum += Character.toUpperCase(strIBANNew.charAt(i));
-                }
-            }
-        }
-
-        int ostat = mod(Integer.parseInt(ibanNum.substring(0, 9)), 97);
-        i = 10;
-
-        while (i <= ibanNum.length())
-        {
-            if (ostat == 0)
-            {
-                ostat = mod(Integer.parseInt(ibanNum.substring(i, i + 9)), 97);
-                i += 9;
-            }
-            else if (Integer.toString(ostat).length() == 1)
-            {
-                ostat = mod(Integer.parseInt(ostat + ibanNum.substring(i, i + 8)), 97);
-                i += 8;
-            }
-            else if (Integer.toString(ostat).length() == 2)
-            {
-                ostat = mod(Integer.parseInt(ostat + ibanNum.substring(i, i + 7)), 97);
-                i += 7;
-            }
-        }
-
-        int lastI = 0;
-        if (lastI < ibanNum.length())
-        {
-            if (ostat >= 97)
-            {
-                ostat = mod(ostat, 97);
-            }
-            else
-            {
-                ostat = Integer.parseInt(ibanNum.substring(lastI + 1));
-            }
-        }
-
-        System.out.println("5.ostat=" + ostat);
-
-        if (ostat == 1)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    private static int mod(int a, int b) {
-        return a % b;
-    }
-
-    private void setName(String name) {
+    public void setName(String name) {
 
         if (name.length() < 3)
         {
@@ -245,19 +136,7 @@ public class Account {
         this.name = name;
     }
 
-    private void setIban(String iban) {
-
-        if (checkIBAN(iban) != 0)
-        {
-
-            throw new IllegalArgumentException("Invalid iban");
-
-        }
-
-        this.iban = iban;
-    }
-
-    private void setEgn(String egn) {
+    public void setEgn(String egn) {
 
         if (checkEGN(egn) != 0)
         {
@@ -266,40 +145,4 @@ public class Account {
 
         this.egn = egn;
     }
-
-    private void setBalance(double balance) {
-
-        if (balance < 0)
-        {
-            throw new IllegalArgumentException("Balance cannot be below zero");
-        }
-
-        this.balance = balance;
-    }
-
-    private void setDate(String date) {
-
-        // TODO: Implement logic to check the validity of the date
-        // My recommendation is regEx
-
-        this.date = date;
-    }
-
-    public void deposit(double amount) {
-        this.balance += amount;
-    }
-
-    public void withdraw(double amount) {
-        if (amount > this.balance)
-        {
-            throw new IllegalArgumentException("Insufficient funds for this operation");
-        }
-
-        this.balance -= amount;
-    }
-
-    public void updateDate(String newDate) {
-        this.setDate(newDate);
-    }
-
 }

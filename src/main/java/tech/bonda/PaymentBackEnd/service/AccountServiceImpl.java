@@ -8,7 +8,7 @@ import tech.bonda.PaymentBackEnd.repository.AccountRepository;
 import java.util.List;
 
 @Service
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
@@ -20,5 +20,10 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
+    }
+
+    @Override
+    public void deleteAccount(int id) {
+        accountRepository.deleteById(id);
     }
 }
