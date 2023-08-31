@@ -2,6 +2,8 @@ package tech.bonda.PaymentBackEnd.entities.account;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import tech.bonda.PaymentBackEnd.entities.card.Card;
+import tech.bonda.PaymentBackEnd.entities.transaction.Transaction;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +12,7 @@ import java.util.Date;
 
 @Getter
 @Entity
-public class Account {
+public class Account implements Accountable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -126,21 +128,25 @@ public class Account {
         }
     }
 
+    @Override
     public void setName(String name) {
 
-        if (name.length() < 3)
-        {
+        if (name.length() < 3) {
+
             throw new IllegalArgumentException("Name must be at least 3 characters long");
+
         }
 
         this.name = name;
     }
 
+    @Override
     public void setEgn(String egn) {
 
-        if (checkEGN(egn) != 0)
-        {
+        if (checkEGN(egn) != 0) {
+
             throw new IllegalArgumentException("Invaliid egn");
+
         }
 
         this.egn = egn;

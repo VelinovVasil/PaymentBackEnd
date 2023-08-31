@@ -1,6 +1,6 @@
 package tech.bonda.PaymentBackEnd.service;
 
-import tech.bonda.PaymentBackEnd.entities.account.Transaction;
+import tech.bonda.PaymentBackEnd.entities.transaction.Transaction;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package tech.bonda.PaymentBackEnd.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import tech.bonda.PaymentBackEnd.entities.account.Transaction;
+import tech.bonda.PaymentBackEnd.entities.transaction.Transaction;
 import tech.bonda.PaymentBackEnd.service.TransactionService;
 
 import java.util.List;

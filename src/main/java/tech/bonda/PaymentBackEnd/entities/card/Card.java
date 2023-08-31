@@ -1,7 +1,8 @@
-package tech.bonda.PaymentBackEnd.entities.account;
+package tech.bonda.PaymentBackEnd.entities.card;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import tech.bonda.PaymentBackEnd.entities.account.Account;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,12 +10,12 @@ import java.util.List;
 
 @Getter
 @Entity
-public class Card {
+public class Card implements Cardable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String cardHolderName;
+    private String cardholderName;
     private String iban;
     private String cardNumber;
     private String cvv;
@@ -123,30 +124,38 @@ public class Card {
         }
     }
 
+
+    @Override
     private static int mod(int a, int b) {
         return a % b;
     }
 
-    public void setCardHolderName(String cardHolderName) {
-        this.cardHolderName = cardHolderName;
+    @Override
+    public void setCardholderName(String cardHolderName) {
+        this.cardholderName = cardHolderName;
     }
 
+    @Override
     public void setIban(String iban) {
         this.iban = iban;
     }
 
+    @Override
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
+    @Override
     public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 
+    @Override
     public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 
+    @Override
     public void setPin(String pin) {
         this.pin = pin;
     }

@@ -1,11 +1,12 @@
-package tech.bonda.PaymentBackEnd.entities.account;
+package tech.bonda.PaymentBackEnd.entities.transaction;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import tech.bonda.PaymentBackEnd.entities.account.Account;
 
 @Getter
 @Entity
-public class Transaction {
+public class Transaction implements Transactionable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,18 +30,22 @@ public class Transaction {
         this.setTimestamp(timestamp);
     }
 
+    @Override
     public void setSenderIban(String senderIban) {
         this.senderIban = senderIban;
     }
 
+    @Override
     public void setReceiverIban(String receiverIban) {
         this.receiverIban = receiverIban;
     }
 
+    @Override
     public void setAmount(double amount) {
         this.amount = amount;
     }
 
+    @Override
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }

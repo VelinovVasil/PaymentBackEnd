@@ -1,6 +1,6 @@
 package tech.bonda.PaymentBackEnd.service;
 
-import tech.bonda.PaymentBackEnd.entities.account.Card;
+import tech.bonda.PaymentBackEnd.entities.card.Card;
 
 import java.util.List;
 
