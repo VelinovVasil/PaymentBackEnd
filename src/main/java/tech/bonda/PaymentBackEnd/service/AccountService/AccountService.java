@@ -1,4 +1,4 @@
-package tech.bonda.PaymentBackEnd.service;
+package tech.bonda.PaymentBackEnd.service.AccountService;
 
 import tech.bonda.PaymentBackEnd.entities.account.Account;
 
@@ -9,7 +9,10 @@ public interface AccountService {
 
     List<Account> getAllAccounts();
 
-    void deleteAccount(int id);
+    void deleteAccount(long id);
 
+    Account getAccountById(long id);
+
+    Account updateAccount(long id, Account account);
 
 }

@@ -1,7 +1,18 @@
 package tech.bonda.PaymentBackEnd.core;
 
-public interface Controller {
+import tech.bonda.PaymentBackEnd.entities.account.Account;
 
-    // TODO: Implement business logic methods
+import java.util.Collection;
+
+public interface Controller {
+    Object create(Object object);
+
+    Collection<Object> getAll();
+
+    Object get(long id);
+
+    Object update(long id, Object object);
+
+    void delete(long id);
 
 }

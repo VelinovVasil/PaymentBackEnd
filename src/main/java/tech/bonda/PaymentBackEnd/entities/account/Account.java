@@ -3,7 +3,6 @@ package tech.bonda.PaymentBackEnd.entities.account;
 import jakarta.persistence.*;
 import lombok.Getter;
 import tech.bonda.PaymentBackEnd.entities.card.Card;
-import tech.bonda.PaymentBackEnd.entities.transaction.Transaction;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,25 +11,23 @@ import java.util.Date;
 
 @Getter
 @Entity
-public class Account implements Accountable{
+public class Account implements Accountable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String egn;
+    private String phoneNumber;
     private String dateOfCreation;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<Card> cards;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private Collection<Transaction> transactions;
 
     public Account() {
     }
 
-    private static int checkEGN(String txt) {
+    public static int checkEGN(String txt) {
         int[] tegla = {2, 4, 8, 5, 10, 9, 7, 3, 6};
         String egn = txt;
         int result = 0;
@@ -129,26 +126,29 @@ public class Account implements Accountable{
     }
 
     @Override
-    public void setName(String name) {
-
-        if (name.length() < 3) {
-
-            throw new IllegalArgumentException("Name must be at least 3 characters long");
-
-        }
-
-        this.name = name;
-    }
-
-    @Override
     public void setEgn(String egn) {
-
-        if (checkEGN(egn) != 0) {
+        if (checkEGN(egn) != 0)
+        {
 
             throw new IllegalArgumentException("Invaliid egn");
 
         }
-
         this.egn = egn;
     }
+
+    @Override
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public void setDateOfCreation(String dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

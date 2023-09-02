@@ -1,4 +1,4 @@
-package tech.bonda.PaymentBackEnd.service;
+package tech.bonda.PaymentBackEnd.service.TransactionService;
 
 import tech.bonda.PaymentBackEnd.entities.transaction.Transaction;
 
@@ -9,5 +9,9 @@ public interface TransactionService {
 
     List<Transaction> getAllTransactions();
 
-    void deleteTransaction(int id);
+    void deleteTransaction(long id);
+
+    Transaction updateTransaction(long id, Transaction transaction);
+
+    Transaction getTransactionById(long id);
 }

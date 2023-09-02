@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import tech.bonda.PaymentBackEnd.entities.transaction.Transaction;
 
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 }

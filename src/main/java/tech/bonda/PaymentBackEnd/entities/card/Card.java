@@ -1,11 +1,14 @@
 package tech.bonda.PaymentBackEnd.entities.card;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
+import tech.bonda.PaymentBackEnd.entities.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -14,7 +17,6 @@ public class Card implements Cardable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String cardholderName;
     private String iban;
     private String cardNumber;
@@ -22,8 +24,12 @@ public class Card implements Cardable {
     private String expirationDate;
     private String pin;
 
-    @ManyToOne
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Collection<Transaction> transactions;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
+    @JsonBackReference
     private Account account;
 
     public Card() {
@@ -125,7 +131,6 @@ public class Card implements Cardable {
     }
 
 
-
     private static int mod(int a, int b) {
         return a % b;
     }
@@ -137,7 +142,11 @@ public class Card implements Cardable {
 
     @Override
     public void setIban(String iban) {
-        this.iban = iban;
+        if (checkIBAN(iban) != 0) {
+            this.iban = iban;
+        } else {
+            throw new IllegalArgumentException("Invalid IBAN");
+        }
     }
 
     @Override

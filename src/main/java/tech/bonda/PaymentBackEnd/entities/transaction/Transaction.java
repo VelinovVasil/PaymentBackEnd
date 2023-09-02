@@ -1,12 +1,13 @@
 package tech.bonda.PaymentBackEnd.entities.transaction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
-import tech.bonda.PaymentBackEnd.entities.account.Account;
+import tech.bonda.PaymentBackEnd.entities.card.Card;
 
 @Getter
 @Entity
-public class Transaction implements Transactionable{
+public class Transaction implements Transactionable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,9 +17,11 @@ public class Transaction implements Transactionable{
     private double amount;
     private String timestamp;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_id")
+    @JsonBackReference
+    private Card card;
+
 
     public Transaction() {
     }
