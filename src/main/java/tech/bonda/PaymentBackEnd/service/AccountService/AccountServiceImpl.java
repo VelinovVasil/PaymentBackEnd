@@ -1,5 +1,7 @@
 package tech.bonda.PaymentBackEnd.service.AccountService;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
@@ -18,12 +20,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String saveAccount(Account account) {
+    public ObjectNode saveAccount(Account account) {
         accountRepository.save(account);
-        return "{\n" +
-                "   \"id\": " + account.getId() + ",\n" +
-                "   \"name\": \"" + account.getName() + "\",\n" +
-                "}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode jsonNode = objectMapper.createObjectNode();
+        jsonNode.put("id", account.getId());
+        jsonNode.put("name", account.getName());
+
+        return jsonNode;
     }
 
     @Override

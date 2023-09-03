@@ -118,12 +118,13 @@ public class AccountGenerator {
         try
         {
             connection = Connector.getConnection();
-            String insertSql = "INSERT INTO account (name, phone_number, egn, date_of_creation) VALUES (?, ?, ?, ?)";
+            String insertSql = "INSERT INTO account (name, email, phone_number, egn, date_of_creation) VALUES (?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(insertSql);
             preparedStatement.setString(1, account.getName());
-            preparedStatement.setString(2, account.getPhoneNumber());
-            preparedStatement.setString(3, account.getEgn());
-            preparedStatement.setString(4, account.getDateOfCreation());
+            preparedStatement.setString(2, account.getEmail());
+            preparedStatement.setString(3, account.getPhoneNumber());
+            preparedStatement.setString(4, account.getEgn());
+            preparedStatement.setString(5, account.getDateOfCreation());
 
             int rowsAffected = preparedStatement.executeUpdate();
 

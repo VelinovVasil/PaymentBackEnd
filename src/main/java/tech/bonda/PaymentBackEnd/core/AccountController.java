@@ -1,5 +1,6 @@
 package tech.bonda.PaymentBackEnd.core;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
@@ -21,7 +22,7 @@ public class AccountController{
     }
 
     @PostMapping("/register")
-    public String create(@RequestBody Account account) {
+    public ObjectNode create(@RequestBody Account account) {
         return accountService.saveAccount(account);
     }
 
