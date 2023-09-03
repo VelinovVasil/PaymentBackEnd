@@ -10,36 +10,32 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/v1/transaction")
-public class TransactionController implements Controller {
+public class TransactionController{
     @Autowired
     private TransactionService transactionService;
 
-    @Override
     @PostMapping("/register")
     public Transaction create(@RequestBody Object object) {
         return transactionService.saveTransaction((Transaction) object);
     }
 
-    @Override
     @GetMapping("/getAll")
-    public List<Object> getAll() {
-        return Collections.singletonList(transactionService.getAllTransactions());
+    public List<Transaction> getAll() {
+        return transactionService.getAllTransactions();
     }
 
-    @Override
     @GetMapping("/get/{id}")
     public Transaction get(@PathVariable long id) {
         return transactionService.getTransactionById(id);
     }
 
-    @Override
     @PostMapping("/update/{id}")
-    public Transaction update(@PathVariable long id, @RequestBody Object object) {
-        return transactionService.updateTransaction(id, (Transaction) object);
+    public Transaction update(@PathVariable long id, @RequestBody Transaction transaction) {
+        return transactionService.updateTransaction(id, transaction);
     }
 
-    @Override
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable long id) {
         transactionService.deleteTransaction(id);

@@ -5,41 +5,36 @@ import org.springframework.web.bind.annotation.*;
 import tech.bonda.PaymentBackEnd.entities.card.Card;
 import tech.bonda.PaymentBackEnd.service.CardService.CardService;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
+
 @RequestMapping("/api/v1/card")
-public class CardController implements Controller{
+public class CardController {
     @Autowired
     private CardService cardService;
 
-    @Override
     @PostMapping("/register")
-    public Card create(@RequestBody Object object) {
-        return cardService.saveCard((Card) object);
+    public Card create(@RequestBody Card card) {
+        return cardService.saveCard((Card) card);
     }
 
-    @Override
     @GetMapping("/getAll")
-    public List<Object> getAll() {
-        return Collections.singletonList(Collections.singleton(cardService.getAllCards()));
+    public List<Card> getAll() {
+        return cardService.getAllCards();
     }
 
-    @Override
     @GetMapping("/get/{id}")
     public Card get(@PathVariable long id) {
         return cardService.getCardById(id);
     }
 
-    @Override
     @PostMapping("/update/{id}")
-    public Card update(@PathVariable long id, @RequestBody Object object) {
-        return cardService.updateCard(id, (Card) object);
+    public Card update(@PathVariable long id, @RequestBody Card card) {
+        return cardService.updateCard(id, card);
     }
 
-    @Override
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable long id) {
         cardService.deleteCard(id);

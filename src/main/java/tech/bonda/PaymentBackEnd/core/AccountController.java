@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1/account")
-public class AccountController implements Controller {
+public class AccountController{
 
     private final AccountService accountService;
 
@@ -20,31 +20,26 @@ public class AccountController implements Controller {
         this.accountService = accountService;
     }
 
-    @Override
     @PostMapping("/register")
-    public String create(@RequestBody Object object) {
-        return accountService.saveAccount((Account) object);
+    public String create(@RequestBody Account account) {
+        return accountService.saveAccount(account);
     }
 
-    @Override
     @GetMapping("/getAll")
-    public List<Object> getAll() {
-        return Collections.singletonList(Collections.singleton(accountService.getAllAccounts()));
+    public List<Account> getAll() {
+        return accountService.getAllAccounts();
     }
 
-    @Override
     @GetMapping("/get/{id}")
     public Account get(@PathVariable long id) {
         return accountService.getAccountById(id);
     }
 
-    @Override
     @PostMapping("/update/{id}")
-    public Account update(@PathVariable long id, @RequestBody Object object) {
-        return accountService.updateAccount(id, (Account) object);
+    public Account update(@PathVariable long id, @RequestBody Account account) {
+        return accountService.updateAccount(id, account);
     }
 
-    @Override
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable long id) {
         accountService.deleteAccount(id);
