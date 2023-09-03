@@ -5,7 +5,7 @@ import tech.bonda.PaymentBackEnd.entities.account.Account;
 import java.util.List;
 
 public interface AccountService {
-    Account saveAccount(Account account);
+    String saveAccount(Account account);
 
     List<Account> getAllAccounts();
 

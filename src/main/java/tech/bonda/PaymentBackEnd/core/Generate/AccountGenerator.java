@@ -102,6 +102,9 @@ public class AccountGenerator {
         return dateFormat.format(randomDate);
     }
 
+    private static String generateEmail(String name) {
+    }
+
     private void saveInDatabase(Account account) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -159,6 +162,5 @@ public class AccountGenerator {
         account.setDateOfCreation(generateDate());
         return account;
     }
-
 }
 

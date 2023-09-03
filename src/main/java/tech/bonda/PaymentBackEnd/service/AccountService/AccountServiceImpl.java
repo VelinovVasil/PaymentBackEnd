@@ -18,8 +18,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account saveAccount(Account account) {
-        return accountRepository.save(account);
+    public String saveAccount(Account account) {
+        accountRepository.save(account);
+        return "{\n" +
+                "   \"id\": " + account.getId() + ",\n" +
+                "   \"name\": \"" + account.getName() + "\",\n" +
+                "}";
     }
 
     @Override
@@ -31,12 +35,12 @@ public class AccountServiceImpl implements AccountService {
     public void deleteAccount(long id) {
         accountRepository.deleteById(id);
     }
-    
+
     @Override
     public Account getAccountById(long id) {
         return accountRepository.findById(id).orElse(null);
     }
-    
+
     @Override
     public Account updateAccount(long id, Account account) {
         Account existingAccount = accountRepository.findById(id).orElse(null);

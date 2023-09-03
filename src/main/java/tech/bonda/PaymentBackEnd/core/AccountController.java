@@ -21,7 +21,7 @@ public class AccountController implements Controller {
 
     @Override
     @PostMapping("/register")
-    public Account create(@RequestBody Object object) {
+    public String create(@RequestBody Object object) {
         return accountService.saveAccount((Account) object);
     }
 

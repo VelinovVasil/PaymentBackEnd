@@ -6,4 +6,6 @@ public interface Accountable {
     void setPhoneNumber(String phoneNumber);
     void setEgn(String egn);
     void setDateOfCreation(String dateOfCreation);
+
+    void setEmail(String email);
 }

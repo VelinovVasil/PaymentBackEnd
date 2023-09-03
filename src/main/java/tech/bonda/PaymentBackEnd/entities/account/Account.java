@@ -16,6 +16,7 @@ public class Account implements Accountable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String email;
     private String egn;
     private String phoneNumber;
     private String dateOfCreation;
@@ -149,6 +150,11 @@ public class Account implements Accountable {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }
