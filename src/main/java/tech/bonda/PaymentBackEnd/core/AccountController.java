@@ -45,4 +45,9 @@ public class AccountController{
     public void delete(@PathVariable long id) {
         accountService.deleteAccount(id);
     }
+
+    @PostMapping("/login")
+    public ObjectNode login(@RequestBody Account account) {
+        return accountService.loginAccount(account);
+    }
 }

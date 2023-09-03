@@ -63,8 +63,6 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.save(existingAccount);
     }
 
-
-
     @Override
     public ObjectNode loginAccount(Account account) {
         Account existingAccount = accountRepository.findByUsername(account.getUsername());
