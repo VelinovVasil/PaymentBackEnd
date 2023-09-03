@@ -16,7 +16,7 @@ public class TransactionController implements Controller {
     private TransactionService transactionService;
 
     @Override
-    @PostMapping("/create")
+    @PostMapping("/register")
     public Transaction create(@RequestBody Object object) {
         return transactionService.saveTransaction((Transaction) object);
     }

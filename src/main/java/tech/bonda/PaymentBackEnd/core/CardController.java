@@ -16,7 +16,7 @@ public class CardController implements Controller{
     private CardService cardService;
 
     @Override
-    @PostMapping("/create")
+    @PostMapping("/register")
     public Card create(@RequestBody Object object) {
         return cardService.saveCard((Card) object);
     }

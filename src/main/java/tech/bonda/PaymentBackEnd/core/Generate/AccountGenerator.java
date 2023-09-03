@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -103,20 +102,13 @@ public class AccountGenerator {
         return dateFormat.format(randomDate);
     }
 
-    public Connection getConnection() throws SQLException {
-        String jdbcUrl = "jdbc:mysql://link.rdb.superhosting.bg:3306/bondatec_bonda";
-        String username = "bondatec_bonda";
-        String password = "fMBX6RV4SAgGtiB";
-        return DriverManager.getConnection(jdbcUrl, username, password);
-    }
-
     private void saveInDatabase(Account account) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try
         {
-            connection = getConnection();
+            connection = Connector.getConnection();
             String insertSql = "INSERT INTO account (name, phone_number, egn, date_of_creation) VALUES (?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(insertSql);
             preparedStatement.setString(1, account.getName());

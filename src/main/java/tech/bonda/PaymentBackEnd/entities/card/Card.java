@@ -17,6 +17,7 @@ public class Card implements Cardable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private double balance;
     private String cardholderName;
     private String iban;
     private String cardNumber;
@@ -118,7 +119,7 @@ public class Card implements Cardable {
             }
         }
 
-        System.out.println("5.ostat=" + ostat);
+        //System.out.println("5.ostat=" + ostat);
 
         if (ostat == 1)
         {
@@ -133,6 +134,10 @@ public class Card implements Cardable {
 
     private static int mod(int a, int b) {
         return a % b;
+    }
+    @Override
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     @Override

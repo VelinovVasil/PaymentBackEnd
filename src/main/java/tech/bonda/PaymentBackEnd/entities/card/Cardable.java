@@ -2,6 +2,7 @@ package tech.bonda.PaymentBackEnd.entities.card;
 
 public interface Cardable {
 
+    void setBalance(double balance);
     void setCardholderName(String cardHolderName);
     void setIban(String iban);
     void setCardNumber(String cardNumber);
