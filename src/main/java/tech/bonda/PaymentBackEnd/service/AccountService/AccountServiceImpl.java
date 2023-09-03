@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
 import tech.bonda.PaymentBackEnd.repository.AccountRepository;
-import tech.bonda.PaymentBackEnd.repository.LoginFailedException;
+import tech.bonda.PaymentBackEnd.core.ErrorHandling.LoginFailedException;
 
 import java.util.List;
 
