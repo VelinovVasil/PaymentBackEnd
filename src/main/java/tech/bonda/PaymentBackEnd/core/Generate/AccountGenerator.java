@@ -20,6 +20,7 @@ public class AccountGenerator {
         Account account = accountGenerator.generateRandomAccount();
         System.out.println("Generated Account Details:");
         System.out.println("Name: " + account.getName());
+        System.out.println("Email: " + account.getEmail());
         System.out.println("Phone Number: " + account.getPhoneNumber());
         System.out.println("EGN: " + account.getEgn());
         System.out.println("Date of Creation: " + account.getDateOfCreation());
@@ -103,6 +104,11 @@ public class AccountGenerator {
     }
 
     private static String generateEmail(String name) {
+        Faker faker = new Faker();
+        String[] nameParts = name.split(" ");
+        String firstName = nameParts[0];
+        String lastName = nameParts[nameParts.length - 1];
+        return faker.internet().emailAddress(firstName + "." + lastName);
     }
 
     private void saveInDatabase(Account account) {
@@ -157,6 +163,7 @@ public class AccountGenerator {
 
         Account account = new Account();
         account.setName(faker.name().fullName());
+        account.setEmail(generateEmail(account.getName()));
         account.setPhoneNumber(phoneNumberFormatter(fakerBG.phoneNumber().cellPhone()));
         account.setEgn(generateEGN(0, 0, generateRandomYear(), 0, 0));
         account.setDateOfCreation(generateDate());
