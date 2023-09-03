@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
 import tech.bonda.PaymentBackEnd.repository.AccountRepository;
+import tech.bonda.PaymentBackEnd.repository.LoginFailedException;
 
 import java.util.List;
 
@@ -69,14 +70,13 @@ public class AccountServiceImpl implements AccountService {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonNode = objectMapper.createObjectNode();
         if (existingAccount == null) {
-            jsonNode.put("message", "Invalid username or password");
+            throw new LoginFailedException("Invalid username or password");
         } else {
             if (BCrypt.checkpw(account.getPassword(), existingAccount.getPassword())) {
-                jsonNode.put("message", "Login successful");
                 jsonNode.put("id", existingAccount.getId());
                 jsonNode.put("name", existingAccount.getName());
             } else {
-                jsonNode.put("message", "Invalid username or password");
+                throw new LoginFailedException("Invalid username or password");
             }
         }
         return jsonNode;
