@@ -17,6 +17,8 @@ public class Account implements Accountable {
     private Long id;
     private String name;
     private String email;
+    private String username;
+    private String password;
     private String egn;
     private String phoneNumber;
     private String dateOfCreation;
@@ -155,6 +157,16 @@ public class Account implements Accountable {
     @Override
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }

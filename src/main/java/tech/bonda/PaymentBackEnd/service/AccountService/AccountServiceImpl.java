@@ -2,6 +2,7 @@ package tech.bonda.PaymentBackEnd.service.AccountService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
@@ -21,8 +22,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public ObjectNode saveAccount(Account account) {
+        //Hashing the password
+        String plainTextPassword = account.getPassword();
+        String hashedPassword = BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+        account.setPassword(hashedPassword);
+
         accountRepository.save(account);
 
+        //Returning the id and name of the account
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonNode = objectMapper.createObjectNode();
         jsonNode.put("id", account.getId());
@@ -54,5 +61,26 @@ public class AccountServiceImpl implements AccountService {
         existingAccount.setPhoneNumber(account.getPhoneNumber());
         existingAccount.setDateOfCreation(account.getDateOfCreation());
         return accountRepository.save(existingAccount);
+    }
+
+
+
+    @Override
+    public ObjectNode loginAccount(Account account) {
+        Account existingAccount = accountRepository.findByUsername(account.getUsername());
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode jsonNode = objectMapper.createObjectNode();
+        if (existingAccount == null) {
+            jsonNode.put("message", "Invalid username or password");
+        } else {
+            if (BCrypt.checkpw(account.getPassword(), existingAccount.getPassword())) {
+                jsonNode.put("message", "Login successful");
+                jsonNode.put("id", existingAccount.getId());
+                jsonNode.put("name", existingAccount.getName());
+            } else {
+                jsonNode.put("message", "Invalid username or password");
+            }
+        }
+        return jsonNode;
     }
 }

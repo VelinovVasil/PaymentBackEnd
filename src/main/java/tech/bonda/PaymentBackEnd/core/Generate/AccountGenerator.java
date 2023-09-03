@@ -1,6 +1,7 @@
 package tech.bonda.PaymentBackEnd.core.Generate;
 
 import com.github.javafaker.Faker;
+import org.mindrot.jbcrypt.BCrypt;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
 
 import java.sql.Connection;
@@ -14,6 +15,8 @@ import java.util.Locale;
 import java.util.Random;
 
 public class AccountGenerator {
+    private static final Faker faker = new Faker();
+
     public static void main(String[] args) {
         AccountGenerator accountGenerator = new AccountGenerator();
 
@@ -21,11 +24,40 @@ public class AccountGenerator {
         System.out.println("Generated Account Details:");
         System.out.println("Name: " + account.getName());
         System.out.println("Email: " + account.getEmail());
+        System.out.println("Username: " + account.getUsername());
+        System.out.println("Password: " + account.getPassword());
         System.out.println("Phone Number: " + account.getPhoneNumber());
         System.out.println("EGN: " + account.getEgn());
         System.out.println("Date of Creation: " + account.getDateOfCreation());
 
         accountGenerator.saveInDatabase(account);
+    }
+
+    private Account generateRandomAccount() {
+        Faker fakerBG = new Faker(Locale.of("bg"));
+        Account account = new Account();
+        account.setName(faker.name().fullName());
+        account.setEmail(generateEmail(account.getName()));
+        generateUsernameAndPassword(account);
+        account.setPhoneNumber(phoneNumberFormatter(fakerBG.phoneNumber().cellPhone()));
+        account.setEgn(generateEGN(0, 0, generateRandomYear(), 0, 0));
+        account.setDateOfCreation(generateDate());
+        return account;
+    }
+
+    private static String generateEmail(String name) {
+        String[] nameParts = name.split(" ");
+        String firstName = nameParts[0];
+        String lastName = nameParts[nameParts.length - 1];
+        return faker.internet().emailAddress(firstName + "." + lastName);
+    }
+
+    private void generateUsernameAndPassword(Account account) {
+        String username = faker.name().username();
+        String password = faker.internet().password();
+        password = BCrypt.hashpw(password, BCrypt.gensalt());
+        account.setUsername(username);
+        account.setPassword(password);
     }
 
     private static String generateEGN(int day, int month, int year, int gender, int region) {
@@ -95,20 +127,11 @@ public class AccountGenerator {
     }
 
     private static String generateDate() {
-        Faker faker = new Faker();
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, faker.number().numberBetween(2020, 2024));
         Date randomDate = faker.date().between(calendar.getTime(), calendar.getTime());
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.format(randomDate);
-    }
-
-    private static String generateEmail(String name) {
-        Faker faker = new Faker();
-        String[] nameParts = name.split(" ");
-        String firstName = nameParts[0];
-        String lastName = nameParts[nameParts.length - 1];
-        return faker.internet().emailAddress(firstName + "." + lastName);
     }
 
     private void saveInDatabase(Account account) {
@@ -118,13 +141,15 @@ public class AccountGenerator {
         try
         {
             connection = Connector.getConnection();
-            String insertSql = "INSERT INTO account (name, email, phone_number, egn, date_of_creation) VALUES (?, ?, ?, ?, ?)";
+            String insertSql = "INSERT INTO account (name, email, username, password, phone_number, egn, date_of_creation) VALUES (?, ?, ?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(insertSql);
             preparedStatement.setString(1, account.getName());
             preparedStatement.setString(2, account.getEmail());
-            preparedStatement.setString(3, account.getPhoneNumber());
-            preparedStatement.setString(4, account.getEgn());
-            preparedStatement.setString(5, account.getDateOfCreation());
+            preparedStatement.setString(3, account.getUsername());
+            preparedStatement.setString(4, account.getPassword());
+            preparedStatement.setString(5, account.getPhoneNumber());
+            preparedStatement.setString(6, account.getEgn());
+            preparedStatement.setString(7, account.getDateOfCreation());
 
             int rowsAffected = preparedStatement.executeUpdate();
 
@@ -156,19 +181,6 @@ public class AccountGenerator {
                 e.printStackTrace();
             }
         }
-    }
-
-    private Account generateRandomAccount() {
-        Faker faker = new Faker();
-        Faker fakerBG = new Faker(Locale.of("bg"));
-
-        Account account = new Account();
-        account.setName(faker.name().fullName());
-        account.setEmail(generateEmail(account.getName()));
-        account.setPhoneNumber(phoneNumberFormatter(fakerBG.phoneNumber().cellPhone()));
-        account.setEgn(generateEGN(0, 0, generateRandomYear(), 0, 0));
-        account.setDateOfCreation(generateDate());
-        return account;
     }
 }
 
