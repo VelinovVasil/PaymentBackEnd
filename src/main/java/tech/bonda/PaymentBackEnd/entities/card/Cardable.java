@@ -1,5 +1,7 @@
 package tech.bonda.PaymentBackEnd.entities.card;
 
+import tech.bonda.PaymentBackEnd.entities.account.Account;
+
 public interface Cardable {
 
     void setBalance(double balance);
@@ -9,5 +11,7 @@ public interface Cardable {
     void setExpirationDate(String expirationDate);
     void setCvv(String cvv);
     void setPin(String pin);
+
+    void setAccount(Account account);
 
 }

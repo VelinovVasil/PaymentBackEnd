@@ -1,6 +1,7 @@
 package tech.bonda.PaymentBackEnd.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.bonda.PaymentBackEnd.entities.card.Card;
 import tech.bonda.PaymentBackEnd.service.CardService.CardService;
@@ -8,16 +9,16 @@ import tech.bonda.PaymentBackEnd.service.CardService.CardService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
-
 @RequestMapping("/api/v1/card")
 public class CardController {
     @Autowired
     private CardService cardService;
 
-    @PostMapping("/register")
-    public Card create(@RequestBody Card card) {
-        return cardService.saveCard((Card) card);
+    @PostMapping("/add/{accountId}")
+    public ResponseEntity<Card> createCardForAccount(@PathVariable Long accountId, @RequestBody Card card) {
+        // Call the service layer to create and associate the card with the account
+        Card createdCard = cardService.createCardForAccount(accountId, card);
+        return ResponseEntity.ok(createdCard);
     }
 
     @GetMapping("/getAll")
@@ -39,4 +40,6 @@ public class CardController {
     public void delete(@PathVariable long id) {
         cardService.deleteCard(id);
     }
+
+
 }

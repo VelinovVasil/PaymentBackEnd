@@ -17,6 +17,7 @@ public class Card implements Cardable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private double balance;
     private String cardholderName;
     private String iban;
@@ -34,6 +35,53 @@ public class Card implements Cardable {
     private Account account;
 
     public Card() {
+    }
+
+    @Override
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    @Override
+    public void setCardholderName(String cardHolderName) {
+        this.cardholderName = cardHolderName;
+    }
+
+    @Override
+    public void setIban(String iban) {
+        /*
+        if (checkIBAN(iban) != 0) {
+            this.iban = iban;
+        } else {
+            throw new IllegalArgumentException("Invalid IBAN");
+        }
+        */
+        this.iban = iban;
+    }
+
+    @Override
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    @Override
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
+    }
+
+    @Override
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    @Override
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    @Override
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     private static int checkIBAN(String strIBAN) {
@@ -130,47 +178,7 @@ public class Card implements Cardable {
             return 0;
         }
     }
-
-
     private static int mod(int a, int b) {
         return a % b;
-    }
-    @Override
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    @Override
-    public void setCardholderName(String cardHolderName) {
-        this.cardholderName = cardHolderName;
-    }
-
-    @Override
-    public void setIban(String iban) {
-        if (checkIBAN(iban) != 0) {
-            this.iban = iban;
-        } else {
-            throw new IllegalArgumentException("Invalid IBAN");
-        }
-    }
-
-    @Override
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    @Override
-    public void setExpirationDate(String expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    @Override
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
-    }
-
-    @Override
-    public void setPin(String pin) {
-        this.pin = pin;
     }
 }

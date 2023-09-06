@@ -7,42 +7,42 @@ import tech.bonda.PaymentBackEnd.entities.account.Account;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.Year;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class AccountGenerator {
     private static final Faker faker = new Faker();
+    private static final Faker fakerBG = new Faker(Locale.of("bg"));
 
     public static void main(String[] args) {
-        AccountGenerator accountGenerator = new AccountGenerator();
+        Scanner Scanner = new Scanner(System.in);
+        int n = Scanner.nextInt();
+        for (int i = 0; i < n; i++)
+        {
+            AccountGenerator accountGenerator = new AccountGenerator();
 
-        Account account = accountGenerator.generateRandomAccount();
-        System.out.println("Generated Account Details:");
-        System.out.println("Name: " + account.getName());
-        System.out.println("Email: " + account.getEmail());
-        System.out.println("Username: " + account.getUsername());
-        System.out.println("Password: " + account.getPassword());
-        System.out.println("Phone Number: " + account.getPhoneNumber());
-        System.out.println("EGN: " + account.getEgn());
-        System.out.println("Date of Creation: " + account.getDateOfCreation());
-
-        accountGenerator.saveInDatabase(account);
+            Account account = accountGenerator.generateRandomAccount();
+            showAccountDetails(account);
+            System.out.println(checkIBAN("BG81BNPA94404518558798"));
+            //accountGenerator.saveInDatabase(account);
+        }
     }
 
     private Account generateRandomAccount() {
-        Faker fakerBG = new Faker(Locale.of("bg"));
         Account account = new Account();
-        account.setName(faker.name().fullName());
+        account.setName(generateName());
         account.setEmail(generateEmail(account.getName()));
         generateUsernameAndPassword(account);
-        account.setPhoneNumber(phoneNumberFormatter(fakerBG.phoneNumber().cellPhone()));
+        account.setPhoneNumber(generatePhoneNumber());
         account.setEgn(generateEGN(0, 0, generateRandomYear(), 0, 0));
         account.setDateOfCreation(generateDate());
         return account;
+    }
+
+    private static String generateName() {
+        return faker.name().firstName() + " " + faker.name().lastName();
     }
 
     private static String generateEmail(String name) {
@@ -54,10 +54,14 @@ public class AccountGenerator {
 
     private void generateUsernameAndPassword(Account account) {
         String username = faker.name().username();
-        String password = faker.internet().password();
+        String password = "1234"; //faker.internet().password();
         password = BCrypt.hashpw(password, BCrypt.gensalt());
         account.setUsername(username);
         account.setPassword(password);
+    }
+
+    private static String generatePhoneNumber() {
+        return phoneNumberFormatter(fakerBG.phoneNumber().cellPhone());
     }
 
     private static String generateEGN(int day, int month, int year, int gender, int region) {
@@ -127,11 +131,20 @@ public class AccountGenerator {
     }
 
     private static String generateDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, faker.number().numberBetween(2020, 2024));
-        Date randomDate = faker.date().between(calendar.getTime(), calendar.getTime());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return dateFormat.format(randomDate);
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return currentDate.format(dateFormatter);
+    }
+
+    private static void showAccountDetails(Account account) {
+        System.out.println("Generated Account Details:");
+        System.out.println("Name: " + account.getName());
+        System.out.println("Email: " + account.getEmail());
+        System.out.println("Username: " + account.getUsername());
+        System.out.println("Password: " + account.getPassword());
+        System.out.println("Phone Number: " + account.getPhoneNumber());
+        System.out.println("EGN: " + account.getEgn());
+        System.out.println("Date of Creation: " + account.getDateOfCreation());
     }
 
     private void saveInDatabase(Account account) {
@@ -182,5 +195,106 @@ public class AccountGenerator {
             }
         }
     }
+
+    private static int checkIBAN(String strIBAN) {
+        int i = 1;
+        String kod = "";
+
+        // Define the Bis_Ascii_arr using a List of Strings
+        List<String> bisAscii = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", // 13
+                "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", // 26
+                "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", // 37
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", // 48
+                "32", "33", "34", "35")); // 51
+
+        String strIBANNew = strIBAN.replace(" ", "");
+
+        // Check if the first and second characters are digits
+        if (!Character.isDigit(strIBANNew.charAt(0)) || !Character.isDigit(strIBANNew.charAt(1)))
+        {
+            return 0;
+        }
+
+        // Reorder the characters in strIBANNew
+        strIBANNew = strIBANNew.substring(4) + strIBANNew.substring(0, 4);
+
+        String ibanNum = "";
+        if (strIBANNew != null)
+        {
+            for (i = 0; i < strIBANNew.length(); i++)
+            {
+                String numb = "";
+                for (int j = 0; j < 26; j++)
+                {
+                    if (Character.toUpperCase(strIBANNew.charAt(i)) == bisAscii.get(j).charAt(0))
+                    {
+                        numb = bisAscii.get(j + 26);
+                        break;
+                    }
+                }
+
+                if (numb != null)
+                {
+                    ibanNum += numb;
+                }
+                else
+                {
+                    ibanNum += Character.toUpperCase(strIBANNew.charAt(i));
+                }
+            }
+        }
+
+        int ostat = mod(Integer.parseInt(ibanNum.substring(0, 9)), 97);
+        i = 10;
+
+        while (i <= ibanNum.length())
+        {
+            if (ostat == 0)
+            {
+                ostat = mod(Integer.parseInt(ibanNum.substring(i, i + 9)), 97);
+                i += 9;
+            }
+            else if (Integer.toString(ostat).length() == 1)
+            {
+                ostat = mod(Integer.parseInt(ostat + ibanNum.substring(i, i + 8)), 97);
+                i += 8;
+            }
+            else if (Integer.toString(ostat).length() == 2)
+            {
+                ostat = mod(Integer.parseInt(ostat + ibanNum.substring(i, i + 7)), 97);
+                i += 7;
+            }
+        }
+
+        int lastI = 0;
+        if (lastI < ibanNum.length())
+        {
+            if (ostat >= 97)
+            {
+                ostat = mod(ostat, 97);
+            }
+            else
+            {
+                ostat = Integer.parseInt(ibanNum.substring(lastI + 1));
+            }
+        }
+
+        //System.out.println("5.ostat=" + ostat);
+
+        if (ostat == 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    private static int mod(int a, int b) {
+        return a % b;
+    }
+
+
 }
 

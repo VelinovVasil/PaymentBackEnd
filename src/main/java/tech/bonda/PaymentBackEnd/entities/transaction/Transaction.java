@@ -26,13 +26,6 @@ public class Transaction implements Transactionable {
     public Transaction() {
     }
 
-    public Transaction(String senderIban, String receiverIban, double amount, String timestamp) {
-        this.setSenderIban(senderIban);
-        this.setReceiverIban(receiverIban);
-        this.setAmount(amount);
-        this.setTimestamp(timestamp);
-    }
-
     @Override
     public void setSenderIban(String senderIban) {
         this.senderIban = senderIban;

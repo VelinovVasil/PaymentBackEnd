@@ -16,7 +16,6 @@ public interface AccountService {
 
     Account updateAccount(long id, Account account);
 
-
     ObjectNode loginAccount(Account account);
 
 }

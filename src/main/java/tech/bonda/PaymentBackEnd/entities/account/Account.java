@@ -15,6 +15,7 @@ public class Account implements Accountable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String email;
     private String username;
@@ -28,6 +29,47 @@ public class Account implements Accountable {
 
 
     public Account() {
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public void setEgn(String egn) {
+        if (checkEGN(egn) != 0)
+        {
+
+            throw new IllegalArgumentException("Invaliid egn");
+
+        }
+        this.egn = egn;
+    }
+
+    @Override
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public void setDateOfCreation(String dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
     }
 
     public static int checkEGN(String txt) {
@@ -126,47 +168,6 @@ public class Account implements Accountable {
                 return 1;
             }
         }
-    }
-
-    @Override
-    public void setEgn(String egn) {
-        if (checkEGN(egn) != 0)
-        {
-
-            throw new IllegalArgumentException("Invaliid egn");
-
-        }
-        this.egn = egn;
-    }
-
-    @Override
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public void setDateOfCreation(String dateOfCreation) {
-        this.dateOfCreation = dateOfCreation;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public void setPassword(String password) {
-        this.password = password;
     }
 
 }

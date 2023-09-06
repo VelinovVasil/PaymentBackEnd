@@ -5,7 +5,7 @@ import tech.bonda.PaymentBackEnd.entities.card.Card;
 import java.util.List;
 
 public interface CardService {
-    Card saveCard(Card card);
+    Card createCardForAccount(Long accountId, Card card);
 
     List<Card> getAllCards();
 

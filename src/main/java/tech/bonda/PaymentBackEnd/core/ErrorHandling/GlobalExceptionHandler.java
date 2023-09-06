@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(LoginFailedException.class)
+    @ExceptionHandler({LoginFailedException.class, DuplicateEGNException.class})
     public ResponseEntity<Object> handleLoginFailedException(LoginFailedException ex) {
         ObjectNode jsonNode = new ObjectMapper().createObjectNode();
         jsonNode.put("error", ex.getMessage());
