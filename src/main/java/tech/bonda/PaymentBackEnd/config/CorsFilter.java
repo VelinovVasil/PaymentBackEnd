@@ -1,4 +1,4 @@
-package tech.bonda.PaymentBackEnd.core.config;
+package tech.bonda.PaymentBackEnd.config;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
