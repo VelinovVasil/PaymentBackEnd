@@ -28,8 +28,7 @@ public class CORSConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("Content-Type", "X-Requested-With", "accept, Origin", "Access-Control-Request-Method",
-                        "Access-Control-Request-Headers")
-                .allowCredentials(true).maxAge(3600);
+                        "Access-Control-Request-Headers");
 
     }
 
