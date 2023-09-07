@@ -10,7 +10,7 @@ public interface AccountService {
 
     List<Account> getAllAccounts();
 
-    void deleteAccount(long id);
+    boolean deleteAccount(long id);
 
     Account getAccountById(long id);
 

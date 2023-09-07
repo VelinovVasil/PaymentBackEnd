@@ -1,4 +1,4 @@
-package tech.bonda.PaymentBackEnd.core.Generate;
+package tech.bonda.PaymentBackEnd.config.Generate;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

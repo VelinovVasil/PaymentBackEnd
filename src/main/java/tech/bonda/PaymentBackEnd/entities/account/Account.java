@@ -1,7 +1,10 @@
 package tech.bonda.PaymentBackEnd.entities.account;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import tech.bonda.PaymentBackEnd.entities.card.Card;
 
 import java.text.ParseException;
@@ -10,46 +13,33 @@ import java.util.Collection;
 import java.util.Date;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Account implements Accountable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
     private String name;
+    @Column(unique = true, name = "email")
     private String email;
+    @Column(unique = true, name = "username")
     private String username;
+    @Column(name = "password")
     private String password;
+    @Column(unique = true, name = "egn")
     private String egn;
+    @Column(unique = true, name = "phone_number")
     private String phoneNumber;
+    @Column(name = "date_of_creation")
     private String dateOfCreation;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<Card> cards;
 
-
-    public Account() {
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Override
     public void setEgn(String egn) {
@@ -60,16 +50,6 @@ public class Account implements Accountable {
 
         }
         this.egn = egn;
-    }
-
-    @Override
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public void setDateOfCreation(String dateOfCreation) {
-        this.dateOfCreation = dateOfCreation;
     }
 
     public static int checkEGN(String txt) {

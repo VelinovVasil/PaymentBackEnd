@@ -1,5 +1,6 @@
 package tech.bonda.PaymentBackEnd.service.CardService;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
@@ -11,19 +12,21 @@ import java.util.List;
 
 @Service
 public class CardServiceImpl implements CardService {
-    @Autowired
-    private CardRepository cardRepository;
+    private final CardRepository cardRepository;
+    private final AccountRepository accountRepository;
 
     @Autowired
-    private AccountRepository accountRepository;
+    public CardServiceImpl(CardRepository cardRepository, AccountRepository accountRepository) {
+        this.cardRepository = cardRepository;
+        this.accountRepository = accountRepository;
+    }
 
     @Override
     public Card createCardForAccount(Long accountId, Card card) {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Cannot find account by ID " + accountId));
+        Account account = accountRepository.findById(accountId).orElseThrow(() -> new EntityNotFoundException("Account not found for ID: " + accountId));
 
         card.setAccount(account);
-
+        card.setIban("IBAN" + account.getId() + card.getId());
         return cardRepository.save(card);
     }
 
@@ -38,20 +41,33 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card updateCard(long id, Card card) {
-        Card existingCard = cardRepository.findById(id).orElse(null);
-        existingCard.setCardholderName(card.getCardholderName());
-        existingCard.setCardNumber(card.getCardNumber());
-        existingCard.setExpirationDate(card.getExpirationDate());
-        existingCard.setCvv(card.getCvv());
-        existingCard.setPin(card.getPin());
-        existingCard.setIban(card.getIban());
-        return cardRepository.save(existingCard);
+    public List<Card> getCardByAccount(long accountId) {
+        return cardRepository.findByAccountId(accountId);
     }
 
     @Override
-    public void deleteCard(long id) {
-        cardRepository.deleteById(id);
+    public Card updateCard(long id, Card card) {
+        Card existingCard = cardRepository.findById(id).orElse(null);
+        if (existingCard != null)
+        {
+            existingCard.setCardholderName(card.getCardholderName());
+            existingCard.setCardNumber(card.getCardNumber());
+            existingCard.setExpirationDate(card.getExpirationDate());
+            existingCard.setCvv(card.getCvv());
+            existingCard.setPin(card.getPin());
+            existingCard.setIban(card.getIban());
+            return cardRepository.save(existingCard);
+        }
+        return null;
     }
 
+    @Override
+    public boolean deleteCard(long id) {
+        if (cardRepository.existsById(id))
+        {
+            cardRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

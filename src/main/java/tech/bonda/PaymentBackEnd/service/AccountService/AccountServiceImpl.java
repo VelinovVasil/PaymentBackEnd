@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.bonda.PaymentBackEnd.core.ErrorHandling.DuplicateEGNException;
-import tech.bonda.PaymentBackEnd.core.ErrorHandling.LoginFailedException;
+import tech.bonda.PaymentBackEnd.config.ErrorHandling.DuplicateEGNException;
+import tech.bonda.PaymentBackEnd.config.ErrorHandling.LoginFailedException;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
 import tech.bonda.PaymentBackEnd.repository.AccountRepository;
 
@@ -29,23 +29,20 @@ public class AccountServiceImpl implements AccountService {
         {
             throw new DuplicateEGNException("EGN already exists: " + account.getEgn());
         }
-        else
-        {
-            //Hashing the password
-            String plainTextPassword = account.getPassword();
-            String hashedPassword = BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
-            account.setPassword(hashedPassword);
 
-            accountRepository.save(account);
+        // Hashing the password
+        String plainTextPassword = account.getPassword();
+        String hashedPassword = BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+        account.setPassword(hashedPassword);
 
-            //Returning the id and name of the account
-            ObjectMapper objectMapper = new ObjectMapper();
-            ObjectNode jsonNode = objectMapper.createObjectNode();
-            jsonNode.put("id", account.getId());
-            jsonNode.put("name", account.getName());
+        accountRepository.save(account);
 
-            return jsonNode;
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode jsonNode = objectMapper.createObjectNode();
+        jsonNode.put("id", account.getId());
+        jsonNode.put("name", account.getName());
+
+        return jsonNode;
     }
 
     @Override
@@ -54,8 +51,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteAccount(long id) {
-        accountRepository.deleteById(id);
+    public boolean deleteAccount(long id) {
+        if (accountRepository.existsById(id))
+        {
+            accountRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -66,11 +68,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account updateAccount(long id, Account account) {
         Account existingAccount = accountRepository.findById(id).orElse(null);
-        existingAccount.setName(account.getName());
-        existingAccount.setEgn(account.getEgn());
-        existingAccount.setPhoneNumber(account.getPhoneNumber());
-        existingAccount.setDateOfCreation(account.getDateOfCreation());
-        return accountRepository.save(existingAccount);
+        if (existingAccount != null)
+        {
+            existingAccount.setName(account.getName());
+            existingAccount.setEgn(account.getEgn());
+            existingAccount.setPhoneNumber(account.getPhoneNumber());
+            existingAccount.setDateOfCreation(account.getDateOfCreation());
+            return accountRepository.save(existingAccount);
+        }
+        return null;
     }
 
     @Override
@@ -78,6 +84,7 @@ public class AccountServiceImpl implements AccountService {
         Account existingAccount = accountRepository.findByUsername(account.getUsername());
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonNode = objectMapper.createObjectNode();
+
         if (existingAccount == null)
         {
             throw new LoginFailedException("Invalid username");

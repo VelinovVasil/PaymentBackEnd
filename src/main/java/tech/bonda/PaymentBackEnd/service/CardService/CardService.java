@@ -11,8 +11,10 @@ public interface CardService {
 
     Card getCardById(long id);
 
+    List<Card> getCardByAccount(long accountId);
+
     Card updateCard(long id, Card card);
 
-    void deleteCard(long id);
+    boolean deleteCard(long id);
 
 }

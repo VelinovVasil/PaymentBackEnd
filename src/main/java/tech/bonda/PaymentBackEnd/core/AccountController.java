@@ -2,17 +2,17 @@ package tech.bonda.PaymentBackEnd.core;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
 import tech.bonda.PaymentBackEnd.service.AccountService.AccountService;
 
-import javax.security.auth.login.LoginException;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/account")
-public class AccountController{
+public class AccountController {
 
     private final AccountService accountService;
 
@@ -22,32 +22,59 @@ public class AccountController{
     }
 
     @PostMapping("/register")
-    public ObjectNode create(@RequestBody Account account) {
-        return accountService.saveAccount(account);
+    public ResponseEntity<ObjectNode> create(@RequestBody Account account) {
+        ObjectNode response = accountService.saveAccount(account);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/getAll")
-    public List<Account> getAll() {
-        return accountService.getAllAccounts();
+    @GetMapping("/")
+    public ResponseEntity<List<Account>> getAll() {
+        List<Account> accounts = accountService.getAllAccounts();
+        return ResponseEntity.ok(accounts);
     }
 
-    @GetMapping("/get/{id}")
-    public Account get(@PathVariable long id) {
-        return accountService.getAccountById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Account> get(@PathVariable long id) {
+        Account account = accountService.getAccountById(id);
+        if (account != null)
+        {
+            return ResponseEntity.ok(account);
+        }
+        else
+        {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping("/update/{id}")
-    public Account update(@PathVariable long id, @RequestBody Account account) {
-        return accountService.updateAccount(id, account);
+    @PutMapping("/{id}")
+    public ResponseEntity<Account> update(@PathVariable long id, @RequestBody Account account) {
+        Account updatedAccount = accountService.updateAccount(id, account);
+        if (updatedAccount != null)
+        {
+            return ResponseEntity.ok(updatedAccount);
+        }
+        else
+        {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable long id) {
-        accountService.deleteAccount(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        boolean deleted = accountService.deleteAccount(id);
+        if (deleted)
+        {
+            return ResponseEntity.noContent().build();
+        }
+        else
+        {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/login")
-    public ObjectNode login(@RequestBody Account account) {
-        return accountService.loginAccount(account);
+    public ResponseEntity<ObjectNode> login(@RequestBody Account account) {
+        ObjectNode response = accountService.loginAccount(account);
+        return ResponseEntity.ok(response);
     }
 }

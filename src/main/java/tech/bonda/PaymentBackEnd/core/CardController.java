@@ -1,6 +1,7 @@
 package tech.bonda.PaymentBackEnd.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.bonda.PaymentBackEnd.entities.card.Card;
@@ -11,35 +12,53 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/card")
 public class CardController {
+
+    private final CardService cardService;
+
     @Autowired
-    private CardService cardService;
+    public CardController(CardService cardService) {
+        this.cardService = cardService;
+    }
 
     @PostMapping("/add/{accountId}")
     public ResponseEntity<Card> createCardForAccount(@PathVariable Long accountId, @RequestBody Card card) {
-        // Call the service layer to create and associate the card with the account
         Card createdCard = cardService.createCardForAccount(accountId, card);
-        return ResponseEntity.ok(createdCard);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCard);
     }
 
-    @GetMapping("/getAll")
-    public List<Card> getAll() {
-        return cardService.getAllCards();
+    @GetMapping("/")
+    public ResponseEntity<List<Card>> getAll() {
+        List<Card> cards = cardService.getAllCards();
+        return ResponseEntity.ok(cards);
     }
 
-    @GetMapping("/get/{id}")
-    public Card get(@PathVariable long id) {
-        return cardService.getCardById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Card> get(@PathVariable long id) {
+        Card card = cardService.getCardById(id);
+        if (card != null) {
+            return ResponseEntity.ok(card);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping("/update/{id}")
-    public Card update(@PathVariable long id, @RequestBody Card card) {
-        return cardService.updateCard(id, card);
+    @PutMapping("/{id}")
+    public ResponseEntity<Card> update(@PathVariable long id, @RequestBody Card card) {
+        Card updatedCard = cardService.updateCard(id, card);
+        if (updatedCard != null) {
+            return ResponseEntity.ok(updatedCard);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable long id) {
-        cardService.deleteCard(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        boolean deleted = cardService.deleteCard(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
-
 }

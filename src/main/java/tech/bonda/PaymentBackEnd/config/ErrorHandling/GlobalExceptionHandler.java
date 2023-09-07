@@ -1,4 +1,4 @@
-package tech.bonda.PaymentBackEnd.core.ErrorHandling;
+package tech.bonda.PaymentBackEnd.config.ErrorHandling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

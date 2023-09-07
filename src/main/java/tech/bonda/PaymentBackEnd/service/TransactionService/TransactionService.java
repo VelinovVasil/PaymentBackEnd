@@ -9,9 +9,11 @@ public interface TransactionService {
 
     List<Transaction> getAllTransactions();
 
-    void deleteTransaction(long id);
+    boolean deleteTransaction(long id);
 
     Transaction updateTransaction(long id, Transaction transaction);
 
     Transaction getTransactionById(long id);
+
+    List<Transaction> getTransactionsByCardId(long cardId);
 }
