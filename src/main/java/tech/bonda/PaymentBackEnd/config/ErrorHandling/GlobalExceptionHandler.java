@@ -9,10 +9,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({LoginFailedException.class, DuplicateEGNException.class})
+    @ExceptionHandler({LoginFailedException.class})
     public ResponseEntity<Object> handleLoginFailedException(LoginFailedException ex) {
         ObjectNode jsonNode = new ObjectMapper().createObjectNode();
         jsonNode.put("error", ex.getMessage());
         return new ResponseEntity<>(jsonNode, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({DuplicateEGNException.class})
+    public ResponseEntity<Object> handleDuplicateEGNException(DuplicateEGNException ex) {
+        ObjectNode jsonNode = new ObjectMapper().createObjectNode();
+        jsonNode.put("error", ex.getMessage());
+        return new ResponseEntity<>(jsonNode, HttpStatus.BAD_REQUEST);
     }
 }
