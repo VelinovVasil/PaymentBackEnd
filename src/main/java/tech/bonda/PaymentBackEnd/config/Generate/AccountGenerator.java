@@ -37,7 +37,7 @@ public class AccountGenerator {
         generateUsernameAndPassword(account);
         account.setPhoneNumber(generatePhoneNumber());
         account.setEgn(generateEGN(0, 0, 0, 0, 0));
-        account.setDateOfCreation(generateDate());
+        account.setDateOfCreation();
         return account;
     }
 

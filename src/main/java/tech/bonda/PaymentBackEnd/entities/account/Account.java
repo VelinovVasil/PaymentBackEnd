@@ -59,6 +59,13 @@ public class Account implements Accountable {
         this.egn = egn;
     }
 
+    @Override
+    public void setDateOfCreation() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date currentDate = new Date();
+        this.dateOfCreation = dateFormat.format(currentDate);
+    }
+
     public static int checkEGN(String txt) {
         int[] tegla = {2, 4, 8, 5, 10, 9, 7, 3, 6};
         String egn = txt;

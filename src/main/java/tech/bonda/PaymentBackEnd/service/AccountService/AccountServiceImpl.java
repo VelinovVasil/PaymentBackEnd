@@ -30,10 +30,14 @@ public class AccountServiceImpl implements AccountService {
             throw new EGNexeption("EGN already exists: " + account.getEgn());
         }
 
+
         // Hashing the password
         String plainTextPassword = account.getPassword();
         String hashedPassword = BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
         account.setPassword(hashedPassword);
+
+        // Setting the date of creation
+        account.setDateOfCreation();
 
         accountRepository.save(account);
 

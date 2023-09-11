@@ -8,7 +8,7 @@ public interface Accountable {
 
     void setEgn(String egn);
 
-    void setDateOfCreation(String dateOfCreation);
+    void setDateOfCreation();
 
     void setEmail(String email);
 
