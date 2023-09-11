@@ -16,8 +16,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(jsonNode, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({DuplicateEGNException.class})
-    public ResponseEntity<Object> handleDuplicateEGNException(DuplicateEGNException ex) {
+    @ExceptionHandler({EGNexeption.class})
+    public ResponseEntity<Object> handleDuplicateEGNException(EGNexeption ex) {
         ObjectNode jsonNode = new ObjectMapper().createObjectNode();
         jsonNode.put("error", ex.getMessage());
         return new ResponseEntity<>(jsonNode, HttpStatus.BAD_REQUEST);

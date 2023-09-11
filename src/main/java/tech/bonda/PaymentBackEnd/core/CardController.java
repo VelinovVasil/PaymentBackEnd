@@ -35,9 +35,25 @@ public class CardController {
     @GetMapping("/{id}")
     public ResponseEntity<Card> get(@PathVariable long id) {
         Card card = cardService.getCardById(id);
-        if (card != null) {
+        if (card != null)
+        {
             return ResponseEntity.ok(card);
-        } else {
+        }
+        else
+        {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getAllByAccount/{accountId}")
+    public ResponseEntity<List<Card>> getAllByAccount(@PathVariable long accountId) {
+        List<Card> cards = cardService.getCardByAccount(accountId);
+        if (cards != null)
+        {
+            return ResponseEntity.ok(cards);
+        }
+        else
+        {
             return ResponseEntity.notFound().build();
         }
     }
@@ -45,9 +61,12 @@ public class CardController {
     @PutMapping("/{id}")
     public ResponseEntity<Card> update(@PathVariable long id, @RequestBody Card card) {
         Card updatedCard = cardService.updateCard(id, card);
-        if (updatedCard != null) {
+        if (updatedCard != null)
+        {
             return ResponseEntity.ok(updatedCard);
-        } else {
+        }
+        else
+        {
             return ResponseEntity.notFound().build();
         }
     }
@@ -55,9 +74,12 @@ public class CardController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         boolean deleted = cardService.deleteCard(id);
-        if (deleted) {
+        if (deleted)
+        {
             return ResponseEntity.noContent().build();
-        } else {
+        }
+        else
+        {
             return ResponseEntity.notFound().build();
         }
     }

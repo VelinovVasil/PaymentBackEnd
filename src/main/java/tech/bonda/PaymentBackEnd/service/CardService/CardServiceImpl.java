@@ -24,9 +24,10 @@ public class CardServiceImpl implements CardService {
     @Override
     public Card createCardForAccount(Long accountId, Card card) {
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new EntityNotFoundException("Account not found for ID: " + accountId));
+        int lastId =Integer.parseInt(cardRepository.findTopByOrderByIdDesc());
 
         card.setAccount(account);
-        card.setIban("IBAN" + account.getId() + card.getId());
+        card.setIban("IBAN" + account.getId() + (lastId + 1));
         return cardRepository.save(card);
     }
 

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tech.bonda.PaymentBackEnd.config.ErrorHandling.EGNexeption;
 import tech.bonda.PaymentBackEnd.entities.card.Card;
 
 import java.text.ParseException;
@@ -52,7 +53,7 @@ public class Account implements Accountable {
         if (checkEGN(egn) != 0)
         {
 
-            throw new IllegalArgumentException("Invaliid egn");
+            throw new EGNexeption("Invalid egn");
 
         }
         this.egn = egn;

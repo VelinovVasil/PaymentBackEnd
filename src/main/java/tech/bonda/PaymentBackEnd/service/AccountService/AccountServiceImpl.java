@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.bonda.PaymentBackEnd.config.ErrorHandling.DuplicateEGNException;
+import tech.bonda.PaymentBackEnd.config.ErrorHandling.EGNexeption;
 import tech.bonda.PaymentBackEnd.config.ErrorHandling.LoginFailedException;
 import tech.bonda.PaymentBackEnd.entities.account.Account;
 import tech.bonda.PaymentBackEnd.repository.AccountRepository;
@@ -27,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
         Account existingAccount = accountRepository.findByEgn(account.getEgn());
         if (existingAccount != null)
         {
-            throw new DuplicateEGNException("EGN already exists: " + account.getEgn());
+            throw new EGNexeption("EGN already exists: " + account.getEgn());
         }
 
         // Hashing the password
