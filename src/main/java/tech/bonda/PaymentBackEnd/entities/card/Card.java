@@ -18,19 +18,25 @@ public class Card implements Cardable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "balance")
+    @Column(name = "balance", columnDefinition = "DECIMAL(10, 2)")
     private double balance;
-    @Column(name = "cardholder_name")
+
+    @Column(name = "cardholder_name", columnDefinition = "VARCHAR(255)")
     private String cardholderName;
-    @Column(name = "iban")
+
+    @Column(name = "iban", unique = true, columnDefinition = "VARCHAR(255)")
     private String iban;
-    @Column(name = "card_number")
+
+    @Column(name = "card_number", unique = true, columnDefinition = "VARCHAR(255)")
     private String cardNumber;
-    @Column(name = "cvv")
-    private String cvv;
-    @Column(name = "expiration_date")
+
+    @Column(name = "expiration_date", columnDefinition = "VARCHAR(255)")
     private String expirationDate;
-    @Column(name = "pin")
+
+    @Column(name = "cvv", columnDefinition = "VARCHAR(255)")
+    private String cvv;
+
+    @Column(name = "pin", columnDefinition = "VARCHAR(255)")
     private String pin;
 
     @ManyToOne(fetch = FetchType.LAZY)

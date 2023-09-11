@@ -22,19 +22,25 @@ public class Account implements Accountable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)")
     private String name;
-    @Column(unique = true, name = "email")
+
+    @Column(name = "email", unique = true, columnDefinition = "VARCHAR(255)")
     private String email;
-    @Column(unique = true, name = "username")
+
+    @Column(name = "username", unique = true, columnDefinition = "VARCHAR(255)")
     private String username;
-    @Column(name = "password")
+
+    @Column(name = "password", columnDefinition = "VARCHAR(255)")
     private String password;
-    @Column(unique = true, name = "egn")
+
+    @Column(name = "egn", unique = true, columnDefinition = "VARCHAR(10)")
     private String egn;
-    @Column(unique = true, name = "phone_number")
+
+    @Column(name = "phone_number", unique = true, columnDefinition = "VARCHAR(255)")
     private String phoneNumber;
-    @Column(name = "date_of_creation")
+
+    @Column(name = "date_of_creation", columnDefinition = "VARCHAR(255)")
     private String dateOfCreation;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

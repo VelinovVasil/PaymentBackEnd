@@ -18,13 +18,16 @@ public class Transaction implements Transactionable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sender_iban")
+    @Column(name = "sender_iban", columnDefinition = "VARCHAR(255)")
     private String senderIban;
-    @Column(name = "receiver_iban")
+
+    @Column(name = "receiver_iban", columnDefinition = "VARCHAR(255)")
     private String receiverIban;
-    @Column(name = "amount")
+
+    @Column(name = "amount", columnDefinition = "DECIMAL(10, 2)")
     private double amount;
-    @Column(name = "timestamp")
+
+    @Column(name = "timestamp", columnDefinition = "VARCHAR(255)")
     private String timestamp;
 
     @ManyToOne

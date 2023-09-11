@@ -20,19 +20,20 @@ public class CardGenerator {
     private List<Long> availableAccountIds = getAvailableAccountIds();
     private final int count = availableAccountIds.size();
 
-    public static void main(String[] args) {
+    public void run() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter number of cards to generate: ");
         int n = scanner.nextInt();
         for (int i = 0; i < n; i++)
         {
-            CardGenerator cardGenerator = new CardGenerator();
-            Long accountId = cardGenerator.getRandomAccountId();
-            Account account = cardGenerator.getAccountById(accountId);
-            Card card = cardGenerator.generateRandomCard(account);
-            boolean saved = cardGenerator.saveInDatabase(accountId, card);
-            cardGenerator.showCardDetails(accountId, card, saved);
+            Long accountId = getRandomAccountId();
+            Account account = getAccountById(accountId);
+            Card card = generateRandomCard(account);
+            boolean saved = saveInDatabase(accountId, card);
+//            showCardDetails(accountId, card, saved);
+
         }
+        System.out.println("Cards generated successfully!");
     }
 
     private Card generateRandomCard(Account account) {
@@ -74,8 +75,7 @@ public class CardGenerator {
 
     public List<Long> getAvailableAccountIds() {
         List<Long> accountIds = new ArrayList<>();
-        try (Connection connection = Connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id FROM account"); ResultSet resultSet = preparedStatement.executeQuery())
+        try (Connection connection = Connector.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("SELECT id FROM account"); ResultSet resultSet = preparedStatement.executeQuery())
         {
 
             while (resultSet.next())
@@ -91,8 +91,7 @@ public class CardGenerator {
     }
 
     private boolean saveInDatabase(Long accountId, Card card) {
-        try (Connection connection = Connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO card (balance, cardholder_name, iban, card_number, cvv, expiration_date, pin, account_id) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"))
+        try (Connection connection = Connector.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO card (balance, cardholder_name, iban, card_number, cvv, expiration_date, pin, account_id) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"))
         {
 
             preparedStatement.setDouble(1, card.getBalance());
@@ -147,15 +146,17 @@ public class CardGenerator {
     }
 
     private long getRandomAccountId() {
-        if (availableAccountIds.isEmpty())
-        {
+        if (availableAccountIds.isEmpty()) {
             availableAccountIds = getAvailableAccountIds();
         }
-        int randomIndex = ThreadLocalRandom.current().nextInt(count);
-        long randomAccountId = availableAccountIds.get(randomIndex);
-        availableAccountIds.remove(randomAccountId);
+        if (availableAccountIds.isEmpty()) {
+            throw new IllegalStateException("No available account IDs");
+        }
+        int randomIndex = ThreadLocalRandom.current().nextInt(availableAccountIds.size());
+        long randomAccountId = availableAccountIds.remove(randomIndex);
         return randomAccountId;
     }
+
 
     private void showCardDetails(Long accountId, Card card, boolean isSaved) {
         System.out.println("Generated Card Details:");

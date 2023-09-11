@@ -33,25 +33,20 @@ public class TransactionGenerator implements AutoCloseable {
         dataSource = new HikariDataSource(config);
     }
 
-    public static void main(String[] args) {
-        try (TransactionGenerator transactionGenerator = new TransactionGenerator())
-        {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter number of transactions to generate: ");
-            int n = scanner.nextInt();
 
-            for (int i = 0; i < n; i++)
-            {
-                long senderCardId = transactionGenerator.getRandomCardId();
-                long receiverCardId = transactionGenerator.getRandomCardId();
-                Transaction transaction = transactionGenerator.generateRandomTransaction(senderCardId, receiverCardId);
-                transactionGenerator.saveInDatabase(senderCardId, receiverCardId, transaction);
-            }
-            System.out.println("Transactions generated successfully!");
-        } catch (Exception e)
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter number of transactions to generate: ");
+        int n = scanner.nextInt();
+
+        for (int i = 0; i < n; i++)
         {
-            e.printStackTrace();
+            long senderCardId = getRandomCardId();
+            long receiverCardId = getRandomCardId();
+            Transaction transaction = generateRandomTransaction(senderCardId, receiverCardId);
+            saveInDatabase(senderCardId, receiverCardId, transaction);
         }
+        System.out.println("Transactions generated successfully!");
     }
 
     public Transaction generateRandomTransaction(long receiverCardId, long senderCardId) {

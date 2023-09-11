@@ -17,17 +17,17 @@ public class AccountGenerator {
     private static final Faker faker = new Faker();
     private static final Faker fakerBG = new Faker(Locale.forLanguageTag("bg"));
 
-    public static void main(String[] args) {
+    public void run() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter number of accounts to generate: ");
         int n = scanner.nextInt();
         for (int i = 0; i < n; i++)
         {
-            AccountGenerator accountGenerator = new AccountGenerator();
-            Account account = accountGenerator.generateRandomAccount();
+            Account account = generateRandomAccount();
             showAccountDetails(account);
-            accountGenerator.saveInDatabase(account);
+            saveInDatabase(account);
         }
+        System.out.println("Accounts generated successfully!");
     }
 
     private Account generateRandomAccount() {
